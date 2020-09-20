@@ -1,22 +1,29 @@
 <template>
-    <div>
         <canvas
             :id="canvasId"
             class="canvas-style"
             v-on:mousedown="mouseDown"
         />
-    </div>
 </template>
 
 <script>
 const paper = require("paper");
 export default {
     name: "Canvas",
-    props: ["canvasId"],
+    props: ["canvasId","inputText"],
+    watch: {
+        inputText: {
+            handler(){
+                this.text.content = this.inputText;
+            }
+        }
+    },
     data: () => ({
         path: null,
         path2: null,
         scope: null,
+        text: null,
+        bgImage: null
     }),
     methods: {
         reset() {
@@ -63,6 +70,25 @@ export default {
     mounted() {
         this.scope = new paper.PaperScope();
         this.scope.setup(this.canvasId);
+        this.text = new paper.PointText({
+            point: [50, 50],
+            content: this.inputText,
+            fillColor: "black",
+            fontFamily: "Courier New",
+            fontWeight: "bold",
+            fontSize: 25,
+        });
+
+        this.bgImage = new paper.Raster({
+            source: "https://images.unsplash.com/photo-1527443060795-0402a18106c2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=751&q=80",
+            position: new paper.Point(100,100)
+            // position: paper.view.center
+        });
+
+        console.log(paper.scope.view)
+
+// https://images.unsplash.com/photo-1527443060795-0402a18106c2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=751&q=80
+
     },
 };
 </script>
@@ -70,12 +96,12 @@ export default {
 <style scoped>
 .canvas-style {
     cursor: crosshair;
-    width: 100vw !important;
-    height: 100vh !important;
-    border: 2px solid black;
+    width: 90vw !important;
+    height: 90vh !important;
+    border: 1px solid black;
     border-radius: 4px;
     display: block;
     margin: auto;
-    box-shadow: 0 10px 8px -8px black;
+    margin-top: 5vh;
 }
 </style>
